@@ -1,42 +1,16 @@
-/*
-import { db } from './guitarras.js';
-
-// Iterar arrays
-// ciclos
-// for(let i = 0; i < db.length; i ++){
-//     console.log(db[i].nombre);
-// }
-
-const createCard = (name) => {
-    const div = document.createElement('div')
-    div.className = 'col-md-6 col-lg-4 my-4 row align-items-center'
-    div.innerText = name
-    return div
-}
-
-const container = document.querySelector('main div')
-
-
-// Métodos de Arrays para Iterar
-db.forEach((guitar) => 
-    {console.log(guitar.nombre)
-    container.appendChild(createCard(guitar.nombre))
-});
-*/
-
 import { db } from './guitarras.js';
 
 let carrito = []
 
 const divContainer = document.querySelector('main div');
 const carritocontainer = document.querySelector('#carrito');
-
+const btnVai = document.querySelector('#vai')
 
 const createCart = (carrito) => {
     console.log(carrito)
     const p = document.createElement('p')
     p.className = 'text-center'
-    p.inertertext = 'El carrito está vacío'
+    p.innerText = 'El carrito está vacío'
     const div = document.createElement('div')
     let total = 0
     let html = `<table class="w-100 table">
@@ -56,7 +30,7 @@ const createCart = (carrito) => {
                                     <td>
                                         <img class="img-fluid" src="./img/${ g.imagen }.jpg" alt="imagen guitarra">
                                     </td>
-                                    <td>SRV</td>
+                                    <td>${g.nombre}</td>
                                     <td class="fw-bold">
                                             $${ g.precio}
                                     </td>
@@ -137,10 +111,11 @@ const buttonClicked = (e) => {
             cantidad: 1
         })*/
         createCart(carrito)
-
+        setLocalStorage()
         
     }
 }
+
 const carritoClicked = (e) => {
     if (e.target.classList.contains('btn')){
         const btn = e.target.innerText
@@ -162,46 +137,34 @@ const carritoClicked = (e) => {
         }else if (btn === 'Vaciar Carrito'.toUpperCase()){
             carrito = []
         }
+        setLocalStorage()
         createCart(carrito)
     }
 }
-/*
-    const idGuitar = 
-    const indexdb= db.findIndex(guitar => guitar.id === Number (idGuitar))
-    carrito.push({...db[indexdb], 
-        cantidad: 1
-    })
-    console.log(carrito)
+
+const getLocalStorage = () => {
+    const carritoStorage = localStorage.getItem('carrito')
+    if (carritoStorage){
+        carrito = JSON.parse(carritoStorage)
+    } else {
+        carrito = []
     }
 }
-*/
 
-/*
-const createDiv = (guitar) => {
-    const div = document.createElement('div');
-    div.className = 'col-md-6 col-lg-4 my-4 row align-items-center'
-    const html = `<div class="col-4">
-                    <img class="img-fluid" src="./img/${guitar.imagen}.jpg" alt="imagen guitarra">
-                </div>
-                <div class="col-8">
-                    <h3 class="text-black fs-4 fw-bold text-uppercase">${ guitar.nombre }</h3>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sit quae labore odit magnam in autem nesciunt, amet deserunt</p>
-                    <p class="fw-black text-primary fs-3">$${ guitar.precio}</p>
-                    <button 
-                        type="button"
-                        class="btn btn-dark w-100 "
-                    >Agregar al Carrito</button>
-                </div>`
-    div.innerHTML = html;
-    return div;
+const setLocalStorage = () => {
+    localStorage.setItem('carrito', JSON.stringify(carrito))
 }
-*/
+
+
 
 //utilizando interadores
 db.forEach( guitar => {
     divContainer.appendChild(createCard(guitar) );
 })
+
+getLocalStorage()
 createCart(carrito)
 
 divContainer.addEventListener('click', buttonClicked)
-carritoContainer.addEventListener('click', carritoClicked)
+carritocontainer.addEventListener('click', carritoClicked)
+btnVai.addEventListener('click', buttonClicked)
